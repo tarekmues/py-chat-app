@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from fastapi.websockets import WebSocket, WebSocketState
+from fastapi.websockets import WebSocket, WebSocketState, WebSocketDisconnect
+from fastapi.staticfiles import StaticFiles
 from typing import Dict, List
-
-from starlette.websockets import WebSocketDisconnect
 
 app = FastAPI()
 
@@ -56,15 +55,15 @@ html = """
             }
             
             function applyChat(event) {
-		if (ws != null) {
-		   ws.close();
-		   ws = null;
-		}
+            if (ws != null) {
+               ws.close();
+               ws = null;
+            }
                 var chatId = document.getElementById("chatId")
                 var newSocket = new WebSocket("ws://13.51.64.14:80/chat/" + chatId.value + "/" + randomString);
                 initSocket(newSocket);
                 ws = newSocket;
-		event.preventDefault();
+                event.preventDefault();
             }
             
             function initSocket(socket) {
@@ -81,10 +80,9 @@ html = """
 </html>
 """
 
-connections: Dict[str, WebSocket] = {}
+app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend/dist")
 
 conn_by_chat: Dict[str, List[WebSocket]] = {}
-
 
 @app.get("/")
 async def get():
