@@ -42,7 +42,6 @@ html = """
             document.getElementById('clientId').innerHTML = randomString;
             console.log(randomString);
             
-            
             var ws;
             
             function sendMessage(event) {
@@ -57,15 +56,15 @@ html = """
             }
             
             function applyChat(event) {
-                if (ws != null) {
-                    ws.close();
-                }         
-
+		if (ws != null) {
+		   ws.close();
+		   ws = null;
+		}
                 var chatId = document.getElementById("chatId")
                 var newSocket = new WebSocket("ws://13.51.64.14:80/chat/" + chatId.value + "/" + randomString);
-                initSocket(ws);
+                initSocket(newSocket);
                 ws = newSocket;
-                event.preventDefault();
+		event.preventDefault();
             }
             
             function initSocket(socket) {
