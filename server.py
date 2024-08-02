@@ -58,8 +58,9 @@ html = """
             
             function applyChat(event) {
                 if (ws != null) {
-                    ws.            
-            
+                    ws.close();
+                }         
+
                 var chatId = document.getElementById("chatId")
                 var newSocket = new WebSocket("ws://13.51.64.14:80/chat/" + chatId.value + "/" + randomString);
                 initSocket(ws);
