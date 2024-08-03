@@ -5,11 +5,9 @@ from typing import Dict, List
 
 app = FastAPI()
 
-#app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend/dist")
-
 conn_by_chat: Dict[str, List[WebSocket]] = {}
 
-@app.websocket("/chat/{chat_id}/")
+@app.websocket("/chat/{chat_id}")
 async def websocket_endpoint(websocket: WebSocket, chat_id: str):
     await websocket.accept()
 
@@ -34,3 +32,6 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
     except WebSocketDisconnect as e:
         print(f"Disconnect block triggered")
         conn_by_chat.get(chat_id).remove(websocket)
+
+
+app.mount("/", StaticFiles(directory="webapp/dist", html=True), name="webapp/dist")

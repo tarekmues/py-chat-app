@@ -42,7 +42,7 @@ export const App: FC = () => {
 
     function initSocket(chatIdFormValue: string, userIdFormValue: string): void {
         if (chatIdFormValue != "" && userIdFormValue != "") {
-            setSocketUrl("ws://16.171.116.146:80/chat/" + chatIdFormValue);
+            setSocketUrl("wss://chat.tarekmues.com/chat/" + chatIdFormValue);
             setChatId(chatIdFormValue);
             setClientId(userIdFormValue);
         } else {
@@ -52,10 +52,10 @@ export const App: FC = () => {
 
     const handleClickSendMessage = useCallback((messageContent: string) => {
         if (readyState == ReadyState.OPEN) {
-            if (messageContent != "") {
+            if (messageContent != "" && clientId != undefined) {
                 sendJsonMessage<ApiChatMessage>({clientId, message: messageContent});
             } else {
-                console.error("Message content must not be empty.");
+                console.error("Message content and client id must not be empty.");
             }
         } else {
             console.error(`Socket is in state ${connectionStatus} while trying to send messages`);
